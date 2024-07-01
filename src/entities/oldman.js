@@ -1,3 +1,6 @@
+import oldmanLines from "../content/oldmanDialogue.js";
+import { dialog } from "../uiComponents/dialog.js";
+import { playAnimIfNotPlaying } from "../utils.js";
 
 export function generateOldmanComponents(k, pos) {
   return [
@@ -9,4 +12,28 @@ export function generateOldmanComponents(k, pos) {
     k.pos(pos),
     "oldman",
   ]
+}
+
+export async function startInteraction(k, oldman, player) {
+  if(player.direction === "left") {
+    oldman.flipX = true;
+    playAnimIfNotPlaying(oldman, "oldman-side");
+  }  
+  
+  if(player.direction === "right") {
+    oldman.flipX = false;
+    playAnimIfNotPlaying(oldman, "oldman-side");
+  }  
+  
+  if(player.direction === "down") {
+    playAnimIfNotPlaying(oldman, "oldman-up");
+  }
+
+  if(player.direction === "up") {
+    playAnimIfNotPlaying(oldman, "oldman-down");
+  }
+
+  const responses = oldmanLines.english;
+  
+  dialog(k, k.vec2(55, 350), responses[0]);
 }

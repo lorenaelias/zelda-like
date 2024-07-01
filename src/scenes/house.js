@@ -1,4 +1,4 @@
-import { generateOldmanComponents } from "../entities/oldman.js";
+import { generateOldmanComponents, startInteraction } from "../entities/oldman.js";
 import {
     generatePlayerComponents,
     setPlayerMovement,
@@ -8,6 +8,7 @@ import {
     drawBoundaries,
     drawTiles,
     fetchMapData,
+    playAnimIfNotPlaying,
 } from "../utils.js";
 
 export default async function house(k) {
@@ -51,11 +52,19 @@ export default async function house(k) {
         drawTiles(k, map, layer, mapData.tileheight, mapData.tilewidth);
     }
 
-    k.camScale(4);
+    k.camScale(2);
 
     setPlayerMovement(k, entities.player);
 
     entities.player.onCollide("door-exit", () => {
       k.go("world");
+    });
+
+    entities.player.onCollide("oldman", () => {
+      startInteraction(k, entities.oldman, entities.player);
+    });
+
+    entities.player.onCollideEnd("oldman", () => {
+      playAnimIfNotPlaying(entities.oldman, "oldman-down");
     });
 }
