@@ -52,7 +52,7 @@ export default async function house(k) {
         drawTiles(k, map, layer, mapData.tileheight, mapData.tilewidth);
     }
 
-    k.camScale(2);
+    k.camScale(3);
 
     setPlayerMovement(k, entities.player);
 

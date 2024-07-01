@@ -1,4 +1,5 @@
 import oldmanLines from "../content/oldmanDialogue.js";
+import { gameState, oldManState } from "../state/stateManagers.js";
 import { dialog } from "../uiComponents/dialog.js";
 import { playAnimIfNotPlaying } from "../utils.js";
 
@@ -33,7 +34,18 @@ export async function startInteraction(k, oldman, player) {
     playAnimIfNotPlaying(oldman, "oldman-down");
   }
 
-  const responses = oldmanLines.english;
-  
-  dialog(k, k.vec2(55, 350), responses[0]);
+  const responses = oldmanLines[gameState.getLocale()];
+
+  let nbTalkedOldMan = oldManState.getNbTalkedOldMan();
+
+  if(nbTalkedOldMan > responses.length-2) {
+    oldManState.setNbTalkedOldMan(1);
+    nbTalkedOldMan = oldManState.getNbTalkedOldMan();
+  }
+
+  if(responses[nbTalkedOldMan]) {
+    await dialog(k, k.vec2(55, 350), responses[nbTalkedOldMan]);
+    oldManState.setNbTalkedOldMan(nbTalkedOldMan + 1);
+  }
+
 }
