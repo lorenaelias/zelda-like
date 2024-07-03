@@ -8,6 +8,8 @@ import {
     drawBoundaries,
     drawTiles,
     fetchMapData,
+    onAttacked,
+    onCollideWithPlayer,
 } from "../utils.js";
 
 export default async function world(k) {
@@ -76,6 +78,8 @@ export default async function world(k) {
 
     for(const slime of entities.slimes) {
         setSlimeAI(k, slime);
+        onAttacked(k, slime, entities.player);
+        onCollideWithPlayer(k, slime);
     }
 
     entities.player.onCollide("door-entrance", () => {

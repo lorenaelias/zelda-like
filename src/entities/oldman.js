@@ -1,5 +1,5 @@
 import oldmanLines from "../content/oldmanDialogue.js";
-import { gameState, oldManState } from "../state/stateManagers.js";
+import { gameState, oldManState, playerState } from "../state/stateManagers.js";
 import { dialog } from "../uiComponents/dialog.js";
 import { playAnimIfNotPlaying } from "../utils.js";
 
@@ -33,6 +33,8 @@ export async function startInteraction(k, oldman, player) {
   if(player.direction === "up") {
     playAnimIfNotPlaying(oldman, "oldman-down");
   }
+
+  playerState.setIsSwordEquipped(true);
 
   const responses = oldmanLines[gameState.getLocale()];
 

@@ -1,3 +1,5 @@
+import { playerState } from "./state/stateManagers.js";
+
 export function playAnimIfNotPlaying(gameObj, animName) {
     if (gameObj.curAnim() !== animName) gameObj.play(animName);
 }
@@ -66,4 +68,50 @@ export function drawBoundaries(k, map, layer) {
             )
         );
     }
+}
+
+export async function blinkEffect(k, entity) {
+    await k.tween(
+        entity.opacity,
+        0,
+        0.1,
+        (val) => (entity.opacity = val),
+        k.easings.linear,
+    );    
+    await k.tween(
+        entity.opacity,
+        1,
+        0.1,
+        (val) => (entity.opacity = val),
+        k.easings.linear,
+    );
+}
+
+export function onAttacked(k, entity, player) {
+    entity.onCollide("swordHitBox", async () => {
+        if(entity.isAttacking) return; // desconsiderar quando é o slime que está atacando o player
+        
+        if(entity.hp() <= 0) {
+            k.destroy(entity);
+            return;
+        }
+
+        await blinkEffect(k, entity);
+        entity.hurt(player.attackPower);
+    })
+}
+
+export function onCollideWithPlayer(k, entity) {
+    entity.onCollide("player", async (player) => {
+        if(player.isAttacking) return; //cancela os dois ataques
+        playerState.setHealth(playerState.getHealth() - entity.attackPower);
+        // k.destroyAll("healthContainer");
+        // healthBar(k, player);
+        await blinkEffect(k, player);
+
+        if(playerState.getHealth() <= 0) {
+            playerState.setHealth(playerState.getMaxHealth);
+            k.go("world");
+        }
+    })
 }

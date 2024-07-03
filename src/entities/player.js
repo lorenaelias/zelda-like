@@ -1,4 +1,4 @@
-import { gameState } from "../state/stateManagers.js";
+import { gameState, playerState } from "../state/stateManagers.js";
 import { areAnyOfTheseKeysDown, playAnimIfNotPlaying } from "../utils.js";
 
 export function generatePlayerComponents(k, pos) {
@@ -30,8 +30,8 @@ function movePlayer(
     moveVec2
 ) {
     if (currentKey === expectedKey && !areAnyOfTheseKeysDown(k, excludedKeys)) {
-        switch(direction) {
-            case "left":    
+        switch (direction) {
+            case "left":
                 player.flipX = true;
                 playAnimIfNotPlaying(player, "player-side");
                 break;
@@ -53,7 +53,7 @@ function movePlayer(
 
 export function setPlayerMovement(k, player) {
     k.onKeyDown((key) => {
-        if(gameState.getFreezePlayer()) return;
+        if (gameState.getFreezePlayer()) return;
 
         movePlayer(
             k,
@@ -93,26 +93,8 @@ export function setPlayerMovement(k, player) {
             k.vec2(player.speed, 0)
         );
 
-
-        movePlayer(
-            k,
-            player,
-            key,
-            "up",
-            ["w"],
-            "up",
-            k.vec2(0, -player.speed)
-        );
-        movePlayer(
-            k,
-            player,
-            key,
-            "w",
-            ["up"],
-            "up",
-            k.vec2(0, -player.speed)
-        );
-
+        movePlayer(k, player, key, "up", ["w"], "up", k.vec2(0, -player.speed));
+        movePlayer(k, player, key, "w", ["up"], "up", k.vec2(0, -player.speed));
 
         movePlayer(
             k,
@@ -134,7 +116,56 @@ export function setPlayerMovement(k, player) {
         );
     });
 
+    k.onKeyPress((key) => {
+        if (key !== "space") return;
+        if (gameState.getFreezePlayer()) return;
+        if (!playerState.getIsSwordEquipped()) return;
+
+        player.isAttacking = true;
+
+        if (k.get("swordHitBox").length === 0) {
+            const swordHitBoxPosX = {
+                left: player.worldPos().x - 2,
+                right: player.worldPos().x + 10,
+                up: player.worldPos().x + 5,
+                down: player.worldPos().x + 2,
+            };
+
+            const swordHitBoxPosY = {
+                left: player.worldPos().y + 5,
+                right: player.worldPos().y + 5,
+                up: player.worldPos().y,
+                down: player.worldPos().y + 10,
+            };
+
+            k.add([
+                k.area({ shape: new k.Rect(k.vec2(0), 8, 8) }),
+                k.pos(
+                    swordHitBoxPosX[player.direction],
+                    swordHitBoxPosY[player.direction]
+                ),
+                "swordHitBox",
+            ]);
+
+            k.wait(0.1, () => {
+                k.destroyAll("swordHitBox");
+                if(
+                    player.direction === "left" ||
+                    player.direction === "right"
+                ) {
+                    playAnimIfNotPlaying(player, "player-side");
+                    player.stop();
+                    return;
+                }
+                playAnimIfNotPlaying(player, `player-${player.direction}`);
+                player.stop();
+            })
+        }
+        playAnimIfNotPlaying(player, `player-attack-${player.direction}`);
+    });
+
     k.onKeyRelease(() => {
+        player.isAttacking = false;
         player.stop();
     });
 }
