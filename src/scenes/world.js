@@ -3,7 +3,9 @@ import {
     setPlayerMovement,
 } from "../entities/player.js";
 import { generateSlimeComponents, setSlimeAI } from "../entities/slime.js";
+import { gameState } from "../state/stateManagers.js";
 import { healthBar } from "../uiComponents/healthBar.js";
+import inProgressMessageLines from "../content/inProgressMessageLines.js";
 import {
     colorizeBackground,
     drawBoundaries,
@@ -12,6 +14,7 @@ import {
     onAttacked,
     onCollideWithPlayer,
 } from "../utils.js";
+import { showMessageInProgress } from "../uiComponents/inProgressDialog.js";
 
 export default async function world(k) {
     colorizeBackground(k, 76, 170, 255);
@@ -85,6 +88,12 @@ export default async function world(k) {
 
     entities.player.onCollide("door-entrance", () => {
         k.go("house");
+    });
+
+    const responses = inProgressMessageLines[gameState.getLocale()];
+    
+    entities.player.onCollide("dungeon-door-entrance", () => {
+        showMessageInProgress(k, k.vec2(55, 350), responses[0]);
     });
 
     healthBar(k);
