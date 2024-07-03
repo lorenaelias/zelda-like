@@ -3,6 +3,7 @@ import {
     setPlayerMovement,
 } from "../entities/player.js";
 import { generateSlimeComponents, setSlimeAI } from "../entities/slime.js";
+import { healthBar } from "../uiComponents/healthBar.js";
 import {
     colorizeBackground,
     drawBoundaries,
@@ -85,4 +86,6 @@ export default async function world(k) {
     entities.player.onCollide("door-entrance", () => {
         k.go("house");
     });
+
+    healthBar(k);
 }

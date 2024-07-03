@@ -1,4 +1,5 @@
 import { playerState } from "./state/stateManagers.js";
+import { healthBar } from "./uiComponents/healthBar.js";
 
 export function playAnimIfNotPlaying(gameObj, animName) {
     if (gameObj.curAnim() !== animName) gameObj.play(animName);
@@ -105,12 +106,12 @@ export function onCollideWithPlayer(k, entity) {
     entity.onCollide("player", async (player) => {
         if(player.isAttacking) return; //cancela os dois ataques
         playerState.setHealth(playerState.getHealth() - entity.attackPower);
-        // k.destroyAll("healthContainer");
-        // healthBar(k, player);
+        k.destroyAll("heartsContainer");
+        healthBar(k, player);
         await blinkEffect(k, player);
 
         if(playerState.getHealth() <= 0) {
-            playerState.setHealth(playerState.getMaxHealth);
+            playerState.setHealth(playerState.getMaxHealth());
             k.go("world");
         }
     })

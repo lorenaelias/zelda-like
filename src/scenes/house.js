@@ -3,6 +3,7 @@ import {
     generatePlayerComponents,
     setPlayerMovement,
 } from "../entities/player.js";
+import { healthBar } from "../uiComponents/healthBar.js";
 import {
     colorizeBackground,
     drawBoundaries,
@@ -67,4 +68,6 @@ export default async function house(k) {
     entities.player.onCollideEnd("oldman", () => {
       playAnimIfNotPlaying(entities.oldman, "oldman-down");
     });
+
+    healthBar(k);
 }
