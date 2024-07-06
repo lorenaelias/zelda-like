@@ -125,10 +125,10 @@ export function setPlayerMovement(k, player) {
 
         if (k.get("swordHitBox").length === 0) {
             const swordHitBoxPosX = {
-                left: player.worldPos().x - 2,
-                right: player.worldPos().x + 10,
+                left: player.worldPos().x - 5,
+                right: player.worldPos().x + 12,
                 up: player.worldPos().x + 5,
-                down: player.worldPos().x + 2,
+                down: player.worldPos().x + 5,
             };
 
             const swordHitBoxPosY = {

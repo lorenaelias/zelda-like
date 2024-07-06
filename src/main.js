@@ -1,6 +1,7 @@
 import k from "./kaboomContext.js";
 import world from "./scenes/world.js";
 import house from "./scenes/house.js";
+import dungeon from "./scenes/dungeon.js";
 
 k.loadFont("gameboy", "./assets/gb.ttf");
 k.loadSprite("assets", "./assets/topdownasset.png", {
@@ -50,6 +51,11 @@ k.loadSprite("assets", "./assets/topdownasset.png", {
         "oldman-down": 866,
         "oldman-side": 907,
         "oldman-up": 905,
+        "ghost-down": {
+            from: 862,
+            to: 863,
+            loop: true,
+        },
     },
 });
 k.loadSpriteAtlas("./assets/topdownasset.png", {
@@ -75,7 +81,8 @@ k.loadSpriteAtlas("./assets/topdownasset.png", {
 
 const scenes = {
     world,
-    house
+    house,
+    dungeon
 };
 
 for (const sceneName in scenes) {

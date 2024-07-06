@@ -90,15 +90,16 @@ export async function blinkEffect(k, entity) {
 
 export function onAttacked(k, entity, player) {
     entity.onCollide("swordHitBox", async () => {
-        if(entity.isAttacking) return; // desconsiderar quando é o slime que está atacando o player
+        if(entity.isAttacking) return; // desconsiderar quando é o slime/fantasma que está atacando o player
+        // pq assim o ataque do player tem que ser cancelado
         
         if(entity.hp() <= 0) {
             k.destroy(entity);
             return;
         }
 
-        await blinkEffect(k, entity);
         entity.hurt(player.attackPower);
+        await blinkEffect(k, entity);
     })
 }
 
@@ -115,4 +116,15 @@ export function onCollideWithPlayer(k, entity) {
             k.go("world");
         }
     })
+}
+
+export async function slideCamY(k, range, duration) {
+    const currentCamPos = k.camPos();
+    await k.tween(
+        currentCamPos.y,
+        currentCamPos.y + range,
+        duration,
+        (newPosY) => k.camPos(currentCamPos.x, newPosY),
+        k.easings.linear
+    );
 }

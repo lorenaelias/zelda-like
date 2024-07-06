@@ -38,6 +38,11 @@ export async function startInteraction(k, oldman, player) {
 
   const responses = oldmanLines[gameState.getLocale()];
 
+  if(gameState.getIsSonSaved()) {
+    await dialog(k, k.vec2(55, 350), responses[3]);
+    return;
+  }
+
   let nbTalkedOldMan = oldManState.getNbTalkedOldMan();
 
   if(nbTalkedOldMan > responses.length-2) {

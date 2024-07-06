@@ -17,6 +17,7 @@ import {
 import { showMessageInProgress } from "../uiComponents/inProgressDialog.js";
 
 export default async function world(k) {
+    const previousScene = gameState.getPreviousScene();
     colorizeBackground(k, 76, 170, 255);
     const mapData = await fetchMapData("./assets/maps/world.json");
 
@@ -37,7 +38,17 @@ export default async function world(k) {
 
         if (layer.name === "SpawnPoints") {
             for (const object of layer.objects) {
-                if (object.name === "player") {
+                if(
+                    object.name==="player-dungeon" &&
+                    previousScene === "dungeon"
+                ) {
+                    entities.player = map.add(
+                        generatePlayerComponents(k, k.vec2(object.x, object.y))
+                    );
+                    continue;
+                }
+
+                if (object.name === "player" && previousScene !== "dungeon") {
                     entities.player = map.add(
                         generatePlayerComponents(k, k.vec2(object.x, object.y))
                     );
@@ -93,7 +104,8 @@ export default async function world(k) {
     const responses = inProgressMessageLines[gameState.getLocale()];
     
     entities.player.onCollide("dungeon-door-entrance", () => {
-        showMessageInProgress(k, k.vec2(55, 350), responses[0]);
+        // showMessageInProgress(k, k.vec2(55, 350), responses[0]);
+        k.go("dungeon");
     });
 
     healthBar(k);
