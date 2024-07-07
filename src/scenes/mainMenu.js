@@ -41,6 +41,6 @@ export default function mainMenu(k) {
   });
 
   k.onKeyPress("enter", () => {
-    k.go("world");
+    k.go("myHouse");
   });
 }

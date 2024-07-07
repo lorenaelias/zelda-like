@@ -48,7 +48,14 @@ export default async function world(k) {
                     continue;
                 }
 
-                if (object.name === "player" && previousScene !== "dungeon") {
+                if (object.name === "player" && previousScene === "house") {
+                    entities.player = map.add(
+                        generatePlayerComponents(k, k.vec2(object.x, object.y))
+                    );
+                    continue;
+                }
+
+                if (object.name === "player-exit-my-house" && previousScene === "myHouse") {
                     entities.player = map.add(
                         generatePlayerComponents(k, k.vec2(object.x, object.y))
                     );
@@ -99,6 +106,10 @@ export default async function world(k) {
 
     entities.player.onCollide("door-entrance", () => {
         k.go("house");
+    });
+
+    entities.player.onCollide("door-entrance-my-house", () => {
+        k.go("myHouse");
     });
 
     const responses = inProgressMessageLines[gameState.getLocale()];

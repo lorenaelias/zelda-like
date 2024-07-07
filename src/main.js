@@ -3,6 +3,7 @@ import world from "./scenes/world.js";
 import house from "./scenes/house.js";
 import dungeon from "./scenes/dungeon.js";
 import mainMenu from "./scenes/mainMenu.js";
+import myHouse from "./scenes/myHouse.js";
 
 k.loadFont("gameboy", "./assets/gb.ttf");
 k.loadSprite("assets", "./assets/topdownasset.png", {
@@ -84,7 +85,8 @@ const scenes = {
     world,
     house,
     dungeon,
-    mainMenu
+    mainMenu,
+    myHouse
 };
 
 for (const sceneName in scenes) {
